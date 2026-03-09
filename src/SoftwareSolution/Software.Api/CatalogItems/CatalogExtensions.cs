@@ -13,6 +13,7 @@ public static class CatalogExtensions
 
             vendorGroup.MapPost("/{vendorId:guid}/catalog-items", AddCatalogItem.AddCatalogItemAsync)
                 .RequireAuthorization("SoftwareCenter");
+                
 
             vendorGroup.MapGet("/{vendorId:guid}/catalog-items", GetCatalogItemsByVendor.HandleAsync);
 
