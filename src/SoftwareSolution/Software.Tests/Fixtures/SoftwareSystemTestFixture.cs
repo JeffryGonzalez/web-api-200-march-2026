@@ -32,7 +32,7 @@ public class SoftwareSystemTestFixture : IAsyncLifetime
             // config.ConfigureTestServices = replace one that is there with something else for this test.
             config.ConfigureTestServices(sp =>
             {
-                sp.AddSingleton(NotificationMock);
+               // sp.AddSingleton(NotificationMock);
                 sp.AddSingleton<TimeProvider>(_ => fakeTime);
             });
         }, new AuthenticationStub().WithName("test-user") );

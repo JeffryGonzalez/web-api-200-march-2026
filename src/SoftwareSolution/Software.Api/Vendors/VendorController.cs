@@ -12,6 +12,12 @@ namespace Software.Api.Vendors;
 public class VendorController(IDocumentSession session) : ControllerBase
 {
 
+    //private IDocumentSession session;
+    //public VendorController(IDocumentSession session)
+    //{
+    //    this.session = session;
+    //}
+
     [HttpPost("/vendors")]
     [Authorize(Policy = "SoftwareCenterManager")]
     public async Task<ActionResult> AddVendorAsync(
@@ -68,4 +74,7 @@ public class VendorController(IDocumentSession session) : ControllerBase
         }
         return Ok(vendorEntity.ToDetails());
     }
+
+    // How do we add a catalog item to a vendor
+    // do we put the add a thing in here.... or where
 }

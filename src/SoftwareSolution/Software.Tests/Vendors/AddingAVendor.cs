@@ -37,6 +37,7 @@ public class AddingAVendor(SoftwareSystemTestFixture fixture) : IClassFixture<So
     [Fact]
     public async Task RequestsAreValidated()
     {
+        // one example of an invalid request. there are LOTS of ways a request can be invalid - don't test all of those.
         var vendorToPost = new CreateVendorRequestModel
         {
             Name = "",
