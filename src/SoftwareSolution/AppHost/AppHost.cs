@@ -2,6 +2,11 @@ using Scalar.Aspire;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+// params are things that are going to be in your environment.
+// connection strings are handled , services are handled
+
+//var p1 = builder.AddParameter("secret-word", true);
+
 var scalar = builder.AddScalarApiReference(); // running a container and configuring it.
 var pgServer = builder.AddPostgres("pg-server") // so is this!
     .WithLifetime(ContainerLifetime.Persistent);

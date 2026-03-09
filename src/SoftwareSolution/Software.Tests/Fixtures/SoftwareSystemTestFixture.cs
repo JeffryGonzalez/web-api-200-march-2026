@@ -19,7 +19,9 @@ public class SoftwareSystemTestFixture : IAsyncLifetime
     public async ValueTask InitializeAsync()
     {
         var fakeTime = new FakeTimeProvider(TestClock);
-        NotificationMock = Substitute.For<IDoNotifications>();
+        NotificationMock = Substitute.For<IDoNotifications>(); // this makes this test a "unit integration test"
+        // which is less confidence inspiring than a system test.
+
         _pgContainer = new PostgreSqlBuilder("postgres:17.6")
             
             .Build(); 
@@ -32,7 +34,7 @@ public class SoftwareSystemTestFixture : IAsyncLifetime
             // config.ConfigureTestServices = replace one that is there with something else for this test.
             config.ConfigureTestServices(sp =>
             {
-               // sp.AddSingleton(NotificationMock);
+                sp.AddSingleton(NotificationMock);
                 sp.AddSingleton<TimeProvider>(_ => fakeTime);
             });
         }, new AuthenticationStub().WithName("test-user") );

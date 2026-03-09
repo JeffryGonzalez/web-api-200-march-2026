@@ -4,7 +4,8 @@ namespace Software.Api.Vendors.Models;
 
 public record CreateVendorRequestModel
 {
-    [MinLength(3), MaxLength(100)]
+    // we are doing all this to make sure you have a good request before we do any work.
+    [MinLength(3), MaxLength(100), Required]
     public required string Name { get; set; }
    
     public required string Url { get; set; }
