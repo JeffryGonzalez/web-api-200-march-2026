@@ -11,6 +11,7 @@ using Software.Api.Vendors.Models;
 namespace Software.Api.Vendors;
 
 [ApiController]
+[Authorize] // every method needs authorization
 public class VendorController(IDocumentSession session) : ControllerBase
 {
 
@@ -51,7 +52,7 @@ public class VendorController(IDocumentSession session) : ControllerBase
     }
 
     [HttpGet("/vendors")]
-    [Authorize]
+
     public async Task<ActionResult> GetAllVendorsAsync(CancellationToken token)
     {
         var allVendors = await session.Query<VendorEntity>()
@@ -61,9 +62,10 @@ public class VendorController(IDocumentSession session) : ControllerBase
 
     [HttpPut("/vendors/{id:guid}/point-of-contact")]
     [Authorize(Policy = "SoftwareCenterManager")]
-    [ServiceFilter<VendorExistsFilter>]
+    [ServiceFilter<VendorExistsFilter>]  // hey before you run this, make sure this says it's cool.
     public async Task<ActionResult> UpdatePoc(Guid id, [FromBody] VendorPointOfContactModel request)
     {
+        // as much validation that can be done before we get here, means we don't have to repeat that.
 
         var vendor = (VendorEntity)HttpContext.Items[VendorExistsFilter.VendorKey]!;     
         vendor.PointOfContact = request;
@@ -73,7 +75,6 @@ public class VendorController(IDocumentSession session) : ControllerBase
     }
 
     [HttpGet("/vendors/{id:guid}")]
-    [Authorize]
     [ServiceFilter<VendorExistsFilter>]
     public async Task<ActionResult> GetVendorByIdAsync(Guid id)
     {

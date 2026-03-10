@@ -12,18 +12,20 @@ public static class CatalogExtensions
             // TODO: Contemplate Groups.
             var vendorGroup = builder.MapGroup("/vendors").RequireAuthorization();
 
-            vendorGroup.MapPost("/{vendorId:guid}/catalog-items", AddCatalogItem.AddCatalogItemAsync)
-                .RequireAuthorization("SoftwareCenter").AddEndpointFilter<VendorExistsEndpointFilter>();
+            var vendorLookupGroup = vendorGroup.MapGroup("");
 
 
-            vendorGroup.MapGet("/{vendorId:guid}/catalog-items", GetCatalogItemsByVendor.HandleAsync)
-                .AddEndpointFilter<VendorExistsEndpointFilter>();
+            vendorLookupGroup.MapPost("/{vendorId:guid}/catalog-items", AddCatalogItem.AddCatalogItemAsync)
+                .RequireAuthorization("SoftwareCenter"); // if you got this far, you are authenticated (have a bearer token), so take this personally if you get an error here 403.
 
-            vendorGroup.MapDelete("/{vendorId:guid}/catalog-items/{itemId:guid}", DeprecateCatalogItem.HandleAsync)
-                .RequireAuthorization("SoftwareCenter")
-                .AddEndpointFilter<VendorExistsEndpointFilter>();
 
-            builder.MapGet("/catalog", GetAllCatalogItems.HandleAsync).RequireAuthorization();
+
+            vendorLookupGroup.MapGet("/{vendorId:guid}/catalog-items", GetCatalogItemsByVendor.HandleAsync);
+
+            vendorLookupGroup.MapDelete("/{vendorId:guid}/catalog-items/{itemId:guid}", DeprecateCatalogItem.HandleAsync)
+                .RequireAuthorization("SoftwareCenter");
+
+            vendorGroup.MapGet("/catalog", GetAllCatalogItems.HandleAsync).RequireAuthorization();
 
             return builder;
         }
