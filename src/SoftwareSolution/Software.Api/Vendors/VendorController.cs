@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Software.Api.Clients;
 using Software.Api.Vendors.Data;
 using Software.Api.Vendors.Models;
+using Wolverine;
 
 
 namespace Software.Api.Vendors;
@@ -25,7 +26,7 @@ public class VendorController(IDocumentSession session) : ControllerBase
     [Authorize(Policy = "SoftwareCenterManager")]
     public async Task<ActionResult> AddVendorAsync(
         [FromBody] CreateVendorRequestModel request,
-        [FromServices] IDoNotifications api,
+         [FromServices] IMessageBus bus,
         [FromServices] TimeProvider clock,
         [FromServices] IOptions<BlockedVendorsOptions> blockedVendors
 
@@ -44,7 +45,12 @@ public class VendorController(IDocumentSession session) : ControllerBase
         // make this new vendor part of a transaction
         session.Store(entityToSave);
         // do this other thing that is in no way part of that transaction
-         await api.SendNotification(new SoftwareShared.Notifications.NotificationRequest { NotificationMessage = "New vendor added " + request.Name });
+        //await api.SendNotification(new SoftwareShared.Notifications.NotificationRequest { NotificationMessage = "New vendor added " + request.Name });
+        var command = new SoftwareShared.Notifications.NotificationRequest { NotificationMessage = "New vendor added " + request.Name };
+        //await bus.SendAsync(command); // there will be (there isn't now) some code to handle this.
+                                      // await bus.InvokeAsync(command);
+        await bus.PublishAsync(command);
+        //bus.ScheduleAsync(command, TimeSpan.FromDays(30));
         //session.Store(someNotification);
         // assuming we got here, commit the transaction.
         await session.SaveChangesAsync();

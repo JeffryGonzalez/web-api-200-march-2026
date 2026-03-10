@@ -3,9 +3,17 @@ using Marten;
 using Software.Api.CatalogItems;
 using Software.Api.Clients;
 using Software.Api.Vendors;
+using System.Threading.Tasks.Dataflow;
+using Wolverine;
+using Wolverine.Marten;
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.UseWolverine(opt =>
+{
+    // talk about this.
+    opt.Policies.UseDurableLocalQueues(); // write this to the database.
+});
 builder.AddNpgsqlDataSource("software-db"); // use the configuration api to find me the connection string for software-db
 builder.Services.AddValidation(); 
 builder.AddServiceDefaults(); 
@@ -37,7 +45,7 @@ builder.Services.AddMarten(options =>
 {
 
 
-}).UseLightweightSessions().UseNpgsqlDataSource();
+}).UseLightweightSessions().UseNpgsqlDataSource().IntegrateWithWolverine();
 
 
 builder.Services.AddHttpClient<NotificationsApi>(client =>

@@ -9,7 +9,8 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var scalar = builder.AddScalarApiReference(); // running a container and configuring it.
 var pgServer = builder.AddPostgres("pg-server") // so is this!
-    .WithLifetime(ContainerLifetime.Persistent);
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithPgWeb();
 
 var softwareDb = pgServer.AddDatabase("software-db");
     // this will be more complicated, probably. You'll need a database with a schema, maybe loaded with some "seed" data, etc.

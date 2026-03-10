@@ -19,7 +19,9 @@ public class NotificationBackgroundWorker(IServiceProvider  sp) : BackgroundServ
 
         var session = scope.ServiceProvider.GetRequiredService<IDocumentSession>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<NotificationBackgroundWorker>>();
-
+        // the hard part goes here.
+        // HangFire - 
+        // Wolverine
         logger.LogInformation("Doing some work, yo.");
         // use that session.
 
