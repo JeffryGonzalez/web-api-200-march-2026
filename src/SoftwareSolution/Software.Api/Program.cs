@@ -54,6 +54,7 @@ builder.Services.Configure<BlockedVendorsOptions>(
 builder.Services.AddScoped<IDoNotifications>(sp => sp.GetRequiredService<NotificationsApi>());
 builder.Services.AddScoped<VendorExistsFilter>(); // If you don't know what that means, ASK OR LOOK IT UP.
 
+builder.Services.AddHostedService<NotificationBackgroundWorker>();
 var app = builder.Build();
 
 

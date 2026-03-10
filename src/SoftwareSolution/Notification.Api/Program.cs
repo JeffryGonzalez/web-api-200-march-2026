@@ -26,7 +26,7 @@ app.MapPost("/notifications", async (NotificationRequest request) =>
     await Task.Delay(1200); // don't do this. 
     // do some real work.
     // This is ganky - promise I'll show this better this afternoon.
-    app.Logger.LogInformation("Notifying folks of " + request.Message);
+    app.Logger.LogInformation("Notifying folks of " + request.NotificationMessage);
     return TypedResults.Ok();
 });
 

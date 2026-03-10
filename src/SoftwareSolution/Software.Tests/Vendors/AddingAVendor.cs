@@ -95,7 +95,7 @@ public class AddingAVendor(SoftwareSystemTestFixture fixture) : IClassFixture<So
         var vendor = await session.Query<VendorEntity>().FirstOrDefaultAsync(v => v.Id == vendorAdded.Id, TestContext.Current.CancellationToken);
         Assert.NotNull(vendor);
         Assert.Equal(vendor.CreatedAt, fixture.TestClock);
-        await fixture.NotificationMock.Received().SendNotification(Arg.Is<NotificationRequest>(n => n.Message.Contains("New vendor added") && n.Message.Contains(vendorToPost.Name)));
+        await fixture.NotificationMock.Received().SendNotification(Arg.Is<NotificationRequest>(n => n.NotificationMessage.Contains("New vendor added") && n.NotificationMessage.Contains(vendorToPost.Name)));
 
     }
 }

@@ -6,5 +6,5 @@ namespace SoftwareShared.Notifications;
 
 public record NotificationRequest
 {
-    public required string Message { get; set; }
+    public required string NotificationMessage { get; set; }
 }

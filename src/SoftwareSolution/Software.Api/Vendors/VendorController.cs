@@ -44,7 +44,8 @@ public class VendorController(IDocumentSession session) : ControllerBase
         // make this new vendor part of a transaction
         session.Store(entityToSave);
         // do this other thing that is in no way part of that transaction
-        await api.SendNotification(new SoftwareShared.Notifications.NotificationRequest { Message = "New vendor added " + request.Name });
+         await api.SendNotification(new SoftwareShared.Notifications.NotificationRequest { NotificationMessage = "New vendor added " + request.Name });
+        //session.Store(someNotification);
         // assuming we got here, commit the transaction.
         await session.SaveChangesAsync();
 
