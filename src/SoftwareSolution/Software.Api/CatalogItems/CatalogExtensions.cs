@@ -9,16 +9,19 @@ public static class CatalogExtensions
     {
         public IEndpointRouteBuilder MapCatalogItemRoutes()
         {
+            // TODO: Contemplate Groups.
             var vendorGroup = builder.MapGroup("/vendors").RequireAuthorization();
 
             vendorGroup.MapPost("/{vendorId:guid}/catalog-items", AddCatalogItem.AddCatalogItemAsync)
-                .RequireAuthorization("SoftwareCenter");
-                
+                .RequireAuthorization("SoftwareCenter").AddEndpointFilter<VendorExistsEndpointFilter>();
 
-            vendorGroup.MapGet("/{vendorId:guid}/catalog-items", GetCatalogItemsByVendor.HandleAsync);
+
+            vendorGroup.MapGet("/{vendorId:guid}/catalog-items", GetCatalogItemsByVendor.HandleAsync)
+                .AddEndpointFilter<VendorExistsEndpointFilter>();
 
             vendorGroup.MapDelete("/{vendorId:guid}/catalog-items/{itemId:guid}", DeprecateCatalogItem.HandleAsync)
-                .RequireAuthorization("SoftwareCenter");
+                .RequireAuthorization("SoftwareCenter")
+                .AddEndpointFilter<VendorExistsEndpointFilter>();
 
             builder.MapGet("/catalog", GetAllCatalogItems.HandleAsync).RequireAuthorization();
 
