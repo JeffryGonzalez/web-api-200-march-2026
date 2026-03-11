@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Gateway\Gateway.csproj" />
     <ProjectReference Include="..\Notification.Api\Notification.Api.csproj" />
     <ProjectReference Include="..\Software.Api\Software.Api.csproj" />
+    <ProjectReference Include="..\Vendors.Api\Vendors.Api.csproj" />
   </ItemGroup>
 
 </Project>
