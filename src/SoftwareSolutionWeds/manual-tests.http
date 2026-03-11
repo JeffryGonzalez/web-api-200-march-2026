@@ -1,0 +1,27 @@
+### Adding a Vendor
+
+POST https://localhost:1337/vendors HTTP/1.1
+Host: software-api
+Content-Type: application/json
+
+{"name":"Microsoft","url":"https://www.microsoft.com",
+"pointOfContact":{"name":"bill","email":"billg@microsoft.com","phone":"555-1212"}}
+
+
+### Change Point of Contact
+
+PUT https://localhost:1337/vendors/cd4c8684-f0d6-429b-9e61-aeae03e25162/point-of-contact HTTP/1.1
+Host: software-api
+Content-Type: application/json
+
+{"name":"adam","email":"satya@microsoft.com","phone":"555-1212"}
+
+
+### GET all vendors
+
+GET https://localhost:1337/vendors
+
+
+### Get individual vendor
+
+GET https://localhost:1337/vendors/cd4c8684-f0d6-429b-9e61-aeae03e25162

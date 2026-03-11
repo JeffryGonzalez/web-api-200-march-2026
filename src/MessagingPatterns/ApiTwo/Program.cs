@@ -28,7 +28,7 @@ builder.UseWolverine(options =>
         .ProcessInline();
     
     options.ListenToNatsSubject("people.>") // I want to see any message products.*.available.uk
-        .UseJetStream("PEOPLE", "api-two");
+        .UseJetStream("PEOPLE", "api-two"); // I am going to identify myself to the broker as api-two. All instances of "me" will be "api-two"
 
 
 });

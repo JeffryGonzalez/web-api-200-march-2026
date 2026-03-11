@@ -29,10 +29,10 @@ builder.UseWolverine(options =>
 
               
     options.PublishMessage<SendMessage>()
-        .ToNatsSubject("messages-sent");
+        .ToNatsSubject("messages-sent"); // kafka topic
     
     options.PublishMessage<UserDocument>()
-        .ToNatsSubject("people.created");
+        .ToNatsSubject("people.created"); // topic
     options.PublishMessage<UserNameChanged>()
         .ToNatsSubject("people.name-changed");
     

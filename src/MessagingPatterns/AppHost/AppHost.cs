@@ -1,7 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var natsTransport = builder.AddNats("nats")
-    .WithJetStream()
+    .WithJetStream() // event streaming support
     .WithLifetime(ContainerLifetime.Persistent);
 
 var pg = builder.AddPostgres("pg")
