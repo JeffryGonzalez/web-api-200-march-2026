@@ -1,4 +1,4 @@
-@host = https://localhost:1339
+@host = https://localhost:1337/v2
 # 1337 is gateway, 1338 is software api, 1339 is vendors api.
 ### Adding a Vendor
 
@@ -6,7 +6,7 @@ POST {{host}}/vendors HTTP/1.1
 Host: software-api
 Content-Type: application/json
 
-{"name":"Michel","url":"https://www.Hypertheory.com",
+{"name":"Enzi","url":"https://www.Hypertheory.com",
 "pointOfContact":{"name":"Jeff","email":"jeff@hypertheory","phone":"867-5309"}}
 
 
@@ -21,7 +21,7 @@ Content-Type: application/json
 
 ### GET all vendors
 
-GET {{host}}/vendors
+GET https://localhost:1337/v2/vendors
 
 
 ### Get individual vendor
@@ -31,4 +31,4 @@ GET {{host}}/vendors/55e7d4ba-e1bf-4572-b675-0215042d44dc
 
 ### Delete
 
-DELETE {{host}}/vendors/55e7d4ba-e1bf-4572-b675-0215042d44dc
+DELETE {{host}}/vendors/bdfb1739-43c8-4cf8-a278-61c06aff70bb

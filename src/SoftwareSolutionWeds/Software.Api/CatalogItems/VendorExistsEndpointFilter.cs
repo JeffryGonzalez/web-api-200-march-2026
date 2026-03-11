@@ -1,5 +1,6 @@
 ﻿using Marten;
 using Software.Api.Vendors.Data;
+using SoftwareShared.Messages;
 
 namespace Software.Api.CatalogItems;
 
@@ -10,8 +11,9 @@ public class VendorExistsEndpointFilter(IDocumentSession session) : IEndpointFil
     {
         var vendorId = context.GetArgument<Guid>(0); // positional
         var token = context.HttpContext.RequestAborted;
+        // make an HTTP HEAD request to vendor-api/vendors/{id}
 
-        var vendor = await session.LoadAsync<VendorEntity>(vendorId);
+        var vendor = await session.LoadAsync<Vendor>(vendorId);
         if(vendor is null )
         {
             return TypedResults.NotFound("No Vendor with that Id");

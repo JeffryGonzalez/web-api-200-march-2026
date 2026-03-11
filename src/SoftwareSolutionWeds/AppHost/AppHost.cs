@@ -19,20 +19,23 @@ var notificationApi = builder.AddProject<Projects.Notification_Api>("notificatio
 var softwareApi = builder.AddProject<Projects.Software_Api>("software-api")
     .WithReference(notificationApi)
     .WithReference(softwareDb)
+    .WithReference(natsTransport)
     .WaitFor(softwareDb);
 
 
 scalar.WithApiReference(softwareApi);
 scalar.WithApiReference(notificationApi);
-
-
-builder.AddProject<Projects.Gateway>("gateway")
-    .WithReference(softwareApi);
-
-
-builder.AddProject<Projects.Vendors_Api>("vendors-api")
+var vendorsApi = builder.AddProject<Projects.Vendors_Api>("vendors-api")
     .WaitFor(vendorsDb)
     .WithReference(vendorsDb)
     .WithReference(natsTransport);
+
+builder.AddProject<Projects.Gateway>("gateway")
+
+    .WithReference(vendorsApi)
+    .WithReference(softwareApi);
+
+
+
 
 builder.Build().Run();

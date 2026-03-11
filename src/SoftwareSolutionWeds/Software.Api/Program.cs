@@ -1,11 +1,13 @@
 
+using ImTools;
 using Marten;
 using Software.Api.CatalogItems;
 using Software.Api.Clients;
 using Software.Api.Vendors;
-
+using SoftwareShared.Messages;
 using Wolverine;
 using Wolverine.Marten;
+using Wolverine.Nats;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,25 @@ builder.UseWolverine(opt =>
 {
     // talk about this.
     opt.Policies.UseDurableLocalQueues(); // write this to the database.
+    opt.UseNats(builder.Configuration.GetConnectionString("nats") ??
+                      throw new Exception("No NATS connection string configured"))
+          .AutoProvision()
+          .UseJetStream(js =>
+          {
+              js.MaxDeliver = 5;
+              js.AckWait = TimeSpan.FromSeconds(30);
+          });
+
+
+
+
+    //opts.PublishMessage<Vendor>().ToNatsSubject("vendors.add");
+    //opts.PublishMessage<VendorTombStone>().ToNatsSubject("vendors.tombstone");
+    opt.ListenToNatsSubject("vendors.add")
+    .UseJetStream("VENDORS", "software");
+
+    opt.ListenToNatsSubject("vendors.tombstone")
+    .UseJetStream("VENDORS", "software");
 });
 builder.AddNpgsqlDataSource("software-db"); // use the configuration api to find me the connection string for software-db
 builder.Services.AddValidation(); 
@@ -43,7 +64,7 @@ var connectionString = builder.Configuration.GetConnectionString("software-db") 
 
 builder.Services.AddMarten(options =>
 {
-
+    options.RegisterDocumentType<Vendor>(); // will just make sure this is created on startup
 
 }).UseLightweightSessions().UseNpgsqlDataSource().IntegrateWithWolverine();
 
@@ -85,3 +106,19 @@ app.MapCatalogItemRoutes();
 
 app.MapDefaultEndpoints(); // this comes from service defaults, and this is mostly health checks.
 app.Run();
+
+
+public class VendorHandler
+{
+    public static async Task Handle(Vendor vendor, IDocumentSession session)
+    {
+        session.Store<Vendor>();
+        await session.SaveChangesAsync();
+    }
+
+    public static async Task Handle(VendorTombStone ts, IDocumentSession session)
+    {
+        session.Delete<Vendor>(ts.Id);
+        await session.SaveChangesAsync();
+    }
+}

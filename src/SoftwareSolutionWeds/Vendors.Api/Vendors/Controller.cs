@@ -1,5 +1,7 @@
 ﻿using Marten;
 using Microsoft.AspNetCore.Mvc;
+using SoftwareShared.Messages;
+using Wolverine;
 
 namespace Vendors.Api.Vendors;
 
@@ -14,7 +16,8 @@ public class Controller(IDocumentSession session) : ControllerBase
 
     [HttpPost("/vendors")]
     public async Task<ActionResult> AddVendorAsync(
-    [FromBody] CreateVendorRequestModel request
+    [FromBody] CreateVendorRequestModel request,
+    [FromServices] IMessageBus bus
     )
     {
         // at this particular date and time a new vendor was created.
@@ -26,6 +29,7 @@ public class Controller(IDocumentSession session) : ControllerBase
             new PointOfContactAssignedToAVendor(request.PointOfContact.Name, request.PointOfContact.Email, request.PointOfContact.Phone)
             );
         await session.SaveChangesAsync();
+        await bus.PublishAsync(new Vendor {  Id = vendorId, Name =  request.Name });
         return Created($"/vendors/{vendorId}", new { });
     }
 
@@ -60,9 +64,10 @@ public class Controller(IDocumentSession session) : ControllerBase
     }
 
     [HttpDelete("/vendors/{id:guid}")]
-    public async Task<ActionResult> DeleteAsync(Guid id) {
+    public async Task<ActionResult> DeleteAsync(Guid id, [FromServices] IMessageBus bus) {
         session.Events.Append(id, new VendorDeleted());
         await session.SaveChangesAsync();
+        await bus.PublishAsync(new VendorTombStone() {  Id  = id });
         return NoContent();
     }
 }
