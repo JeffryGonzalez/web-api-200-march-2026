@@ -32,4 +32,10 @@ public class Controller(IDocumentSession session) : ControllerBase
     {
         return Ok();
     }
+
+    [HttpGet("/vendors/{id:guid}")]
+    public async Task<ActionResult> GetVendorByIdAsync(Guid id, CancellationToken token)
+    {
+        return Ok();
+    }
 }
