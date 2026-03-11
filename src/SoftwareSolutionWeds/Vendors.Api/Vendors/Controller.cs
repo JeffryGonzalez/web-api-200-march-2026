@@ -43,7 +43,8 @@ public class Controller(IDocumentSession session) : ControllerBase
     [HttpGet("/vendors")]
     public async Task<ActionResult> GetAllVendorsAsync(CancellationToken token)
     {
-        return Ok();
+        var response = await session.Query<VendorListReadModel>().ToListAsync();
+        return Ok(response);
     }
 
     [HttpGet("/vendors/{id:guid}")]
@@ -57,7 +58,16 @@ public class Controller(IDocumentSession session) : ControllerBase
 
         return Ok(vendor);
     }
+
+    [HttpDelete("/vendors/{id:guid}")]
+    public async Task<ActionResult> DeleteAsync(Guid id) {
+        session.Events.Append(id, new VendorDeleted());
+        await session.SaveChangesAsync();
+        return NoContent();
+    }
 }
 
 public record VendorCreated(string Name, string Url);
 public record PointOfContactAssignedToAVendor(string Name, string Email, string Phone);
+
+public record VendorDeleted();

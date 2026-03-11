@@ -1,5 +1,7 @@
 using ImTools;
+using JasperFx.Events.Projections;
 using Marten;
+using Vendors.Api.Vendors;
 using Wolverine;
 using Wolverine.Marten;
 
@@ -22,9 +24,11 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddMarten(config =>
 {
-
+    config.Projections.Add<VendorListProjection>(ProjectionLifecycle.Async);
+    // this is "expensive" but absolutely no "eventual consistency" at all. 
 }).IntegrateWithWolverine()
     .UseNpgsqlDataSource()
+    .AddAsyncDaemon(JasperFx.Events.Daemon.DaemonMode.Solo)
     .UseLightweightSessions();
 
 var app = builder.Build();

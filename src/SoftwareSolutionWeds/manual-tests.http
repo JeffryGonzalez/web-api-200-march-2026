@@ -6,8 +6,8 @@ POST {{host}}/vendors HTTP/1.1
 Host: software-api
 Content-Type: application/json
 
-{"name":"Hypertheory","url":"https://www.jetbrains.com",
-"pointOfContact":{"name":"Shirley","email":"shirley@jetbrains.com","phone":"555-1212"}}
+{"name":"Michel","url":"https://www.Hypertheory.com",
+"pointOfContact":{"name":"Jeff","email":"jeff@hypertheory","phone":"867-5309"}}
 
 
 ### Change Point of Contact
@@ -26,4 +26,9 @@ GET {{host}}/vendors
 
 ### Get individual vendor
 
-GET {{host}}/vendors/bcda1cd9-09fb-44dd-bd92-ace8de8d51b0
+GET {{host}}/vendors/55e7d4ba-e1bf-4572-b675-0215042d44dc
+
+
+### Delete
+
+DELETE {{host}}/vendors/55e7d4ba-e1bf-4572-b675-0215042d44dc
